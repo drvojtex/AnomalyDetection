@@ -1,7 +1,7 @@
 
 using LinearAlgebra, Statistics
 using DelimitedFiles
-
+using ThreadTools
 
 # GMM
 function create_gmm(K::Int64, dim::Int64)
@@ -34,7 +34,7 @@ function EM!(Θ, X, K, gmm, gm, steps)
         @show step
         
         # E-step
-        γ = mapreduce(permutedims, vcat, [map(xᵢ->E_step(k, xᵢ), eachcol(X)) for k in 1:K])'
+        γ = mapreduce(permutedims, vcat, [tmap(xᵢ->E_step(k, xᵢ), eachcol(X)) for k in 1:K])'
 
         # M-step
         Θ[:α] = vec(mean(γ, dims=2))
