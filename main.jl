@@ -27,7 +27,7 @@ function test_model(model, params, valid, test_n, test_a)
         append!(arr, model(params, data[:,i]))
     end
     pred = zeros(2, 3)
-    for (j, data) in zip(1:3, [valid, test_data_n, test_data_a])
+    for (j, data) in zip(1:3, [valid, test_n, test_a])
         for i=1:size(data)[2]
             if model(params, data[:,i]) > quantile!(arr, 0.1) pred[1, j]+=1
             else pred[2, j]+=1 end
