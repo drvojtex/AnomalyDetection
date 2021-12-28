@@ -21,29 +21,26 @@ test_data_n = data_normal[:, Int(round(3*N_normal/4)):end]
 test_data_a = data_normal[:, begin:Int(round(N_anomal/2))]
 N = size(data_normal)[1]
 
-function test_model(model, params, data)
+function test_model(model, params, valid, test_n, test_a)
     arr = []
     for i=1:size(data)[2]
         append!(arr, model(params, data[:,i]))
     end
-    pred = zeros(2)
-    for i=1:size(data)[2]
-        if model(params, data[:,i]) > quantile!(arr, 0.1) pred[1]+=1
-        else pred[2]+=1 end
+    pred = zeros(2, 3)
+    for (j, data) in zip(1:3, [valid, test_data_n, test_data_a])
+        for i=1:size(data)[2]
+            if model(params, data[:,i]) > quantile!(arr, 0.1) pred[1, j]+=1
+            else pred[2, j]+=1 end
+        end
     end
-    acc = pred[1]/sum(pred)
+    @show pred[1, 1]/sum(pred[:, 1]), pred[1, 2]/sum(pred[:, 2]), pred[1, 3]/sum(pred[:, 3])
     return acc
 end
 
 # Select hyperparameter by accuracy on valid data
-acc_valid = []
 for K=2:20
     ps, gmm_model, gm_model = create_gmm(K, N) # prepare model
     EM!(ps, trn_data, K, gmm_model, gm_model, 30) # learn model params
-    acc = test_model(gmm_model, ps, valid_data) # run on valid data
-    append!(acc_valid, acc)
-    @show K, acc
+    test_model(gmm_model, ps, valid_data, test_data_n, test_data_a) # run on valid data
 end
-best_K = argmax(acc_valid)+1
-@show best_K
 
