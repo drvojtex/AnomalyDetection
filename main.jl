@@ -4,7 +4,7 @@ using Random
 
 include("parzenwindow.jl")
 include("gmm.jl")
-include("roc")
+include("roc.jl")
 
 
 # load data
