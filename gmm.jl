@@ -1,6 +1,5 @@
 
 using LinearAlgebra, Statistics
-using DelimitedFiles
 using ThreadTools
 
 # GMM
