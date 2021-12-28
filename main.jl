@@ -7,8 +7,8 @@ include("gmm.jl")
 
 
 # load data
-data_anomal = readdlm("data_anomalyproject/pendigits/anomalous.txt")'
-data_normal = readdlm("data_anomalyproject/pendigits/normal.txt")'
+data_anomal = readdlm("data_anomalyproject/yeast/anomalous.txt")'
+data_normal = readdlm("data_anomalyproject/yeast/normal.txt")'
 data_anomal = data_anomal[:, shuffle(1:end)]
 data_normal = data_normal[:, shuffle(1:end)]
 
@@ -28,7 +28,7 @@ function test_model(model, params, data)
     end
     pred = zeros(2)
     for i=1:size(data)[2]
-        if model(params, data[:,i]) > median(arr) pred[1]+=1
+        if model(params, data[:,i]) > quantile!(arr, 0.1) pred[1]+=1
         else pred[2]+=1 end
     end
     acc = pred[1]/sum(pred)
@@ -45,5 +45,5 @@ for K=2:20
     @show K, acc
 end
 best_K = argmax(acc_valid)+1
-@show @best_K
+@show best_K
 
