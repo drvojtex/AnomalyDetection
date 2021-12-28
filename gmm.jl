@@ -30,7 +30,7 @@ function EM!(Θ, X, K, gmm, gm, steps)
     E_step(k, x) = Θ[:α][k]*gm(Θ[:μ][k], Θ[:Σ][k], x)/gmm(Θ, x)
 
     for step=1:steps      
-        @show step
+        #@show step
         
         # E-step
         γ = mapreduce(permutedims, vcat, [tmap(xᵢ->E_step(k, xᵢ), eachcol(X)) for k in 1:K])'
