@@ -42,6 +42,6 @@ K = 10
 ps, gmm_model, gm_model = create_gmm(K, N) # prepare model
 EM!(ps, trn_data, K, gmm_model, gm_model, 50) # learn model params
 test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, 0.1) # run on valid data
-roc_auc(gmm_model, ps, hcat(test_data_n, data_anomal), 
-        hcat(ones(size(test_data_n)[2]), zeros(size(data_anomal)[2])))
+@show roc_auc(gmm_model, ps, hcat(test_data_n, data_anomal), 
+        vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1)))
 

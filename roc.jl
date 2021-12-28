@@ -7,6 +7,7 @@ function get_probs(model, θ, data)
     for i=1:size(data)[2]
         append!(probs, model(θ, data[:,i]))
     end
+    return probs
 end
 
 function fpr_tpr(ŷ, y, ϵ)
@@ -24,7 +25,7 @@ end
 function roc_auc(model, θ, data, labels)
     probs = get_probs(model, θ, data)
     fpr_tpr_arr = []
-    for ϵ=0:((maximum(probs)-minimum(probs))/size(data)[2]):1
+    for ϵ=0:((maximum(probs)-minimum(probs))/(size(data)[2]*maximum(probs))):1
         fpr, tpr = fpr_tpr(probs, labels, ϵ)
         append!(fpr_tpr_arr, [(fpr, tpr)])
     end
