@@ -23,8 +23,8 @@ N = size(data_normal)[1]
 
 function test_model(model, params, valid, test_n, test_a)
     arr = []
-    for i=1:size(data)[2]
-        append!(arr, model(params, data[:,i]))
+    for i=1:size(valid)[2]
+        append!(arr, model(params, valid[:,i]))
     end
     pred = zeros(2, 3)
     for (j, data) in zip(1:3, [valid, test_n, test_a])
