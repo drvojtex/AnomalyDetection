@@ -35,7 +35,7 @@ function test_model(model, params, valid, test_n, test_a, q)
         end
     end
     @show pred[1, 1]/sum(pred[:, 1]), pred[1, 2]/sum(pred[:, 2]), 1-pred[1, 3]/sum(pred[:, 3])
-    @show ((pred[1, 2]/sum(pred[:, 2]))*size(test_n)[2] + (pred[1, 3]/sum(pred[:, 3]))*size(test_a)[2])/(size(test_n)[2]+size(test_a)[2])
+    @show ((pred[1, 2]/sum(pred[:, 2]))*size(test_n)[2] + (pred[2, 3]/sum(pred[:, 3]))*size(test_a)[2])/(size(test_n)[2]+size(test_a)[2])
 end
 
 
