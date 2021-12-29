@@ -35,8 +35,8 @@ function test_model(model, params, valid, test_n, test_a, q)
     acc_valid = pred[1, 1]/sum(pred[:, 1])
     acc_test_n = pred[1, 2]/sum(pred[:, 2])
     acc_test_a = 1-pred[1, 3]/sum(pred[:, 3])
-    @printf("acc: valid %.2f, test_n %.2f, test_a %.2f", acc_valid, acc_test_n, acc_test_a)
-    @printf("acc: %.2f", (acc_test_n*size(test_n)[2]+acc_test_a*size(test_a)[2])/(size(test_n)[2]+size(test_a)[2]))
+    @printf("acc: valid %.2f, test_n %.2f, test_a, %.2f\n", acc_valid, acc_test_n, acc_test_a)
+    @printf("acc: %.2f\n", (acc_test_n*size(test_n)[2]+acc_test_a*size(test_a)[2])/(size(test_n)[2]+size(test_a)[2]))
 end
 
 
@@ -49,8 +49,7 @@ for i=1:size(valid_data)[2]
 end
 test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, quantile!(arr, 0.25));
 testing_data = hcat(test_data_n, data_anomal);
-testing_labels = vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1));
+testing_labels = Vector{Bool}(vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1))[:,1]);
 roc_auc(gmm_model, ps, testing_data, testing_labels);
-recall(gmm_model, ps, testing_data, testing_labels, quantile!(arr, 0.25));
-precision(gmm_model, ps, testing_data, testing_labels, quantile!(arr, 0.25));
+precision_recall(gmm_model, ps, testing_data, testing_labels, quantile!(arr, 0.25));
 
