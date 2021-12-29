@@ -34,11 +34,12 @@ function test_model(model, params, valid, test_n, test_a, q)
             else pred[2, j]+=1 end
         end
     end
-    @show pred[1, 1]/sum(pred[:, 1]), pred[1, 2]/sum(pred[:, 2]), pred[1, 3]/sum(pred[:, 3])
+    @show pred[1, 1]/sum(pred[:, 1]), pred[1, 2]/sum(pred[:, 2]), 1-pred[1, 3]/sum(pred[:, 3])
+    @show ((pred[1, 1]/sum(pred[:, 1]))*size(valid)[2] + (pred[1, 2]/sum(pred[:, 2]))*size(test_n)[2] + (pred[1, 3]/sum(pred[:, 3]))*size(test_a)[2])/(size(valid)[2]+size(test_n)[2]+size(test_a)[2])
 end
 
 
-K = 10
+K = 2
 ps, gmm_model, gm_model = create_gmm(K, N) # prepare model
 EM!(ps, trn_data, K, gmm_model, gm_model, 50) # learn model params
 test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, 0.1) # run on valid data
