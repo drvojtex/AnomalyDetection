@@ -10,11 +10,11 @@ function create_gmm(K::Int64, dim::Int64)
     coefs = Dict(:μ=>μ_coefs, :Σ=>Σ_coefs, :α=>α_coefs)
     function gmm(Θ, x)
         n = size(x)[1]
-        return mapreduce(usa->usa[3]*(1/((2*π)^(n/2)*det(usa[2])^(1/2)))*
+        return log(mapreduce(usa->usa[3]*(1/((2*π)^(n/2)*det(usa[2])^(1/2)))*
                             (ℯ^(-((x-usa[1])'*inv(usa[2])*(x-usa[1])/2))), +, 
-                                zip(Θ[:μ], Θ[:Σ], Θ[:α]))
+                                zip(Θ[:μ], Θ[:Σ], Θ[:α])))
     end
-    gm(μ, Σ, x) = (1/((2*π)^(size(x)[1]/2)*det(Σ)^(1/2)))*(ℯ^(-((x-μ)'*inv(Σ)*(x-μ)/2)))
+    gm(μ, Σ, x) = log((1/((2*π)^(size(x)[1]/2)*det(Σ)^(1/2)))*(ℯ^(-((x-μ)'*inv(Σ)*(x-μ)/2))))
     return coefs, gmm, gm
 end
 
