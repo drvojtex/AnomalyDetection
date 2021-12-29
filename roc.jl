@@ -1,6 +1,6 @@
 
-using NumericalIntegration
 using Plots
+using EvalMetrics
 
 function get_probs(model, θ, data)
     probs = []
@@ -10,40 +10,24 @@ function get_probs(model, θ, data)
     return probs
 end
 
-function fpr_tpr(ŷ, y, ϵ)
-    fp = sum(map(x->x[1] == 1 && x[2] == 0, zip(map(x->x>ϵ, ŷ), y)))
-    tn = sum(map(x->x[1] == 0 && x[2] == 0, zip(map(x->x>ϵ, ŷ), y)))
-    fpr = fp/(fp+tn)
+function roc_auc(model, θ, data, targets)
+    scores = get_probs(model, θ, data)
+    auc = auc_trapezoidal(prcurve(targets, scores)...)
+    println("auc: ", auc)
+end
 
+function recall(model, θ, data, y, ϵ) 
+    ŷ = get_probs(model, θ, data)
     fn = sum(map(x->x[1] == 0 && x[2] == 1, zip(map(x->x>ϵ, ŷ), y)))
     tp = sum(map(x->x[1] == 1 && x[2] == 1, zip(map(x->x>ϵ, ŷ), y)))
     tpr = tp/(fn+tp)
-
-    return fpr, tpr
+    println("recall: ", tpr)
 end
 
-function roc_auc(model, θ, data, labels)
-    probs = get_probs(model, θ, data)
-    fpr_tpr_arr = []
-    for ϵ=0:((maximum(probs)-minimum(probs))/(size(data)[2]*maximum(probs))):1
-        fpr, tpr = fpr_tpr(probs, labels, ϵ)
-        append!(fpr_tpr_arr, [(fpr, tpr)])
-    end
-    sort!(fpr_tpr_arr)
-    
-    # trapezoid integration
-    auc = integrate(map(x->x[1], fpr_tpr_arr), 
-                    map(x->x[2], fpr_tpr_arr))
-    return auc
-end
-
-function rocplot(model, θ, data, labels)
-    probs = get_probs(model, θ, data)
-    fpr_tpr_arr = []
-    for ϵ=0:((maximum(probs)-minimum(probs))/size(data)[2]):1
-        fpr, tpr = fpr_tpr(probs, labels, ϵ)
-        append!(fpr_tpr_arr, [(fpr, tpr)])
-    end
-    sort!(fpr_tpr_arr)
-    plot(map(x->x[1], fpr_tpr_arr), map(x->x[2], fpr_tpr_arr))
+function precision(model, θ, data, y, ϵ) 
+    ŷ = get_probs(model, θ, data)
+    fp = sum(map(x->x[1] == 1 && x[2] == 0, zip(map(x->x>ϵ, ŷ), y)))
+    tp = sum(map(x->x[1] == 1 && x[2] == 1, zip(map(x->x>ϵ, ŷ), y)))
+    tpr = tp/(fp+tp)
+    println("precision: ", tpr)
 end
