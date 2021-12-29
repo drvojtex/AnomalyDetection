@@ -39,7 +39,7 @@ function test_model(model, params, valid, test_n, test_a, q)
 end
 
 
-K = 50
+K = 10
 ps, gmm_model, gm_model = create_gmm(K, N); # prepare model
 EM!(ps, trn_data, K, gmm_model, gm_model, 50); # learn model params
 test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, 0.1); # run on valid data
