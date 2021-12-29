@@ -41,7 +41,7 @@ function EM!(Θ, X, K, gmm, gm, steps)
         for k=1:K
             μₖ = mapreduce(ix->γ[ix[1], k]*ix[2], +, zip(1:N, eachcol(X)))/Γ[k]
             Σₖ = mapreduce(ix->γ[ix[1], k]*(ix[2]-μₖ)*(ix[2]-μₖ)', +, zip(1:N, eachcol(X)))/Γ[k]
-            if det(Σₖ) < 10e-40 Σₖ+=I*10e-12 end
+            if det(Σₖ) < 10e-40 Σₖ+=I*10e-30 end
             Θ[:μ][k] = μₖ
             Θ[:Σ][k] = Σₖ
         end 

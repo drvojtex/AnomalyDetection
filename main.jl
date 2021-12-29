@@ -19,7 +19,7 @@ N_anomal = size(data_anomal)[2]
 trn_data = data_normal[:, begin:Int(round(N_normal/2))]
 valid_data = data_normal[:, Int(round(N_normal/2)):Int(round(3*N_normal/4))]
 test_data_n = data_normal[:, Int(round(3*N_normal/4)):end]
-test_data_a = data_normal[:, begin:Int(round(N_anomal/2))]
+test_data_a = data_anomal[:, begin:Int(round(N_anomal/2))]
 N = size(data_normal)[1]
 
 function test_model(model, params, valid, test_n, test_a, q)
@@ -35,10 +35,10 @@ function test_model(model, params, valid, test_n, test_a, q)
 end
 
 
-K = 30
+K = 10
 ps, gmm_model, gm_model = create_gmm(K, N); # prepare model
-EM!(ps, trn_data, K, gmm_model, gm_model, 50); # learn model params
-test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, 0.1); # run on valid data
+EM!(ps, trn_data, K, gmm_model, gm_model, 100); # learn model params
+test_model(gmm_model, ps, valid_data, test_data_n, test_data_a, 0.1); # run on valid data
 @show roc_auc(gmm_model, ps, hcat(test_data_n, data_anomal), 
         vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1)));
 

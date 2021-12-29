@@ -5,14 +5,15 @@ include("gmm.jl")
 
 using Plots
 
-K = 2 # cluster numbers
+K = 3 # cluster numbers
 num_samples = 50
 ps, gmm_model, gm_model = create_gmm(K, 2) # prepare model
 
 # prepare data
 tmp=ones(2, num_samples)
-#tmp[1,:] .= 0
-X = hcat(randn(2, num_samples)/2, randn(2, num_samples)/4+tmp*1.6)
+tmp1=ones(2, num_samples)
+tmp1[1, :] .= 0
+X = hcat(randn(2, num_samples)/4+tmp1*1.6, randn(2, num_samples)/2, randn(2, num_samples)/4+tmp*1.6)
 
 # learn model params
 EM!(ps, X, K, gmm_model, gm_model, 100)
