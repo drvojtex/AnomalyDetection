@@ -25,7 +25,7 @@ function EM!(Θ, X, K, gmm, gm, steps)
     N = size(X)[2]
     Θ[:Σ] = fill(cov(X, dims=2), K)
     Θ[:α] = fill(1/K, K)
-    Θ[:μ] = [X[:, k] for k in 1:Int(round(N/K)):N]
+    Θ[:μ] = [X[:, k] for k in 1:K]
 
     E_step(k, x) = Θ[:α][k]*gm(Θ[:μ][k], Θ[:Σ][k], x)/gmm(Θ, x)
 
