@@ -40,16 +40,17 @@ function test_model(model, params, valid, test_n, test_a, q)
 end
 
 
-K = 3
-ps, gmm_model, gm_model = create_gmm(K, N); # prepare model
-EM!(ps, trn_data, K, gmm_model, gm_model, 100); # learn model params
-arr = []
-for i=1:size(valid_data)[2]
-    append!(arr, gmm_model(ps, valid_data[:, i]))
+for K=2:10
+    println("\nK: ", K) 
+    ps, gmm_model, gm_model = create_gmm(K, N); # prepare model
+    EM!(ps, trn_data, K, gmm_model, gm_model, 100); # learn model params
+    arr = []
+    for i=1:size(valid_data)[2]
+        append!(arr, gmm_model(ps, valid_data[:, i]))
+    end
+    test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, quantile!(arr, 0.25));
+    testing_data = hcat(test_data_n, data_anomal);
+    testing_labels = Vector{Bool}(vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1))[:,1]);
+    roc_auc(gmm_model, ps, testing_data, testing_labels);
+    precision_recall(gmm_model, ps, testing_data, testing_labels, quantile!(arr, 0.25));
 end
-test_model(gmm_model, ps, valid_data, test_data_n, data_anomal, quantile!(arr, 0.25));
-testing_data = hcat(test_data_n, data_anomal);
-testing_labels = Vector{Bool}(vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1))[:,1]);
-roc_auc(gmm_model, ps, testing_data, testing_labels);
-precision_recall(gmm_model, ps, testing_data, testing_labels, quantile!(arr, 0.25));
-
