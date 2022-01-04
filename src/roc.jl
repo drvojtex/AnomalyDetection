@@ -10,10 +10,9 @@ function get_probs(model, θ, data)
     return probs
 end
 
-function roc_auc(model, θ, data, targets)
+function eval_report(model, θ, data, targets)
     scores = Vector{Float64}(get_probs(model, θ, data))
-    auc = auc_trapezoidal(prcurve(targets, scores)...)
-    println("auc: ", auc)
+    print(binary_eval_report(targets, scores))
 end
 
 function precision_recall(model, θ, data, targets, ϵ) 

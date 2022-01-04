@@ -1,7 +1,7 @@
 
 using Plots
 
-include("parzenwindow.jl")
+include("../src/parzenwindow.jl")
 
 # Data generation
 data1 = ones(20)*2+randn(20)

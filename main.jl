@@ -4,9 +4,9 @@ using Random
 using Printf
 using ThreadTools
 
-include("parzenwindow.jl")
-include("gmm.jl")
-include("roc.jl")
+include("src/parzenwindow.jl")
+include("src/gmm.jl")
+include("src/roc.jl")
 
 
 # load data
@@ -27,7 +27,7 @@ N = size(data_normal)[1]
 
 likelihood(model, params, data) = log(mean(tmap(x->model(params, x), eachcol(data))))
 
-function choose_model(data)
+function choose_gmm_model(data)
     models_dict = Dict()  # likelihood => [model, params]
     lh::Float64 = 0
     for K=2:10
@@ -40,11 +40,11 @@ function choose_model(data)
     return models_dict[maximum(keys(models_dict))]
 end
 
-gmm_model, ps = choose_model(valid_data)
+gmm_model, ps = choose_gmm_model(valid_data)
 
 @printf("Best K: %d\n", size(ps[:μ])[1])
 
 testing_data = hcat(test_data_n, data_anomal);
 testing_labels = Vector{Bool}(vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1))[:,1]);
-roc_auc(gmm_model, ps, testing_data, testing_labels);
+eval_report(gmm_model, ps, testing_data, testing_labels);
 #precision_recall(gmm_model, ps, testing_data, testing_labels, quantile!(arr, 0.1));

@@ -1,5 +1,5 @@
 
-include("gmm.jl")
+include("../src/gmm.jl")
 
 # 2D Gaussian mixed model on random data with heatmap.
 
