@@ -25,12 +25,12 @@ test_data_a = data_anomal[:, begin:Int(round(N_anomal/2))]
 N = size(data_normal)[1]
 
 
-likelihood(model, params, data) = mean(tmap(x->model(params, x), eachcol(data)))
+likelihood(model, params, data) = log(mean(tmap(x->model(params, x), eachcol(data))))
 
 function choose_model(data)
     models_dict = Dict()  # likelihood => [model, params]
     lh::Float64 = 0
-    for K=2:20
+    for K=2:10
         ps, gmm_model, gm_model = create_gmm(K, N); # prepare model
         EM!(ps, trn_data, K, gmm_model, gm_model, 60); # learn model params
         lh = likelihood(gmm_model, ps, data)
