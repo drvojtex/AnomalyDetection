@@ -25,12 +25,13 @@ test_data_a = data_anomal[:, begin:Int(round(N_anomal/2))]
 N = size(data_normal)[1]
 
 # Define function to get likelihood proxy param.
-likelihood(model, params, data) = log(mean(tmap(x->model(params, x), eachcol(data))))
+likelihood(model, params, data) = log(mean(tmap(x->model(params, Vector{Float64}(x)), eachcol(data))))
+likelihood(model, data) = log(mean(tmap(x->model(Vector{Float64}(x)), eachcol(data))))
 
 
 @doc """
-Function to Choose optimal count of components (hyperparametr) of Gaussian mixture model. The choose is 
-performed base on maximization of likelihood (proxy parametr) on given (validation) data. 
+Function to choose optimal count of components (hyperparametr) of Gaussian mixture model. The choose is 
+performed based on maximization of likelihood (proxy parametr) on given (validation) data. 
 Minimum of components is 2, maximum is 10.
 
 # Examples
@@ -53,12 +54,44 @@ function choose_gmm_model(data::Matrix{Float64})
     return models_dict[maximum(keys(models_dict))]
 end
 
+@doc """
+Function to choose optimal window-size (hyperparametr) of Parzen window estimator. The choose is 
+performed based on maximization of likelihood (proxy parametr) on given (validation) data. 
+Minimum of window-size is 0.1, maximum is 10. The kernel function is Gaussian kernel.
+
+# Examples
+```jldoctest
+h = choose_parzenwindow_model(data)
+```
+where the 'h' is window-size and 
+'data' is set of (validation) data (size(dim, N) ~ (dimension of data, data count).
+""" ->
+function choose_parzenwindow_model(data::Matrix{Float64})
+    models_dict = Dict{Float64, Float64}()  # likelihood => window-size
+    lh::Float64 = 0
+    kernel(x) = k(x)
+    for step=0.1:0.1:10
+        model(x) = create_parzen_window(step, trn_data, kernel, x) # prepare model
+        lh = likelihood(model, data)
+        models_dict[lh] = step
+    end
+    return models_dict[maximum(keys(models_dict))]
+end
+
 # Learn GMM on train data and choose the best count of components by validation data.
 gmm_model, ps = choose_gmm_model(valid_data)
 @printf("Best K: %d\n", size(ps[:μ])[1])
 
+# Learn Parzen window estimator on train data and choose the best window-size by validation data.
+h = choose_parzenwindow_model(valid_data)
+kernel(x) = k(x)
+parzenwindow(x) = create_parzen_window(h, trn_data, kernel, x)
+@printf("Best window-size: %.2f\n", h)
+
 # Prepare testing data.
 testing_data = hcat(test_data_n, data_anomal);
 testing_labels = Vector{Bool}(vcat(ones(size(test_data_n)[2], 1), zeros(size(data_anomal)[2], 1))[:,1]);
+
 # Print evaluation report.
 eval_report(gmm_model, ps, testing_data, testing_labels);
+eval_report(parzenwindow, testing_data, testing_labels);

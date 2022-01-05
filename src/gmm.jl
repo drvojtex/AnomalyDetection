@@ -20,9 +20,8 @@ function create_gmm(K::Int64, dim::Int64)
     Σ_coefs::Vector{Matrix{Float64}} = [randn(dim, dim) for _ in 1:K]
     α_coefs::Vector{Float64} = randn(K)
     coefs::Dict{Symbol, Vector} = Dict(:μ=>μ_coefs, :Σ=>Σ_coefs, :α=>α_coefs)
-    gmm(Θ::Dict{Symbol, Vector}, x::Array{Float64}) = gmm_computation(Θ, x)
-    gmm(Θ::Dict{Symbol, Vector}, x::sample_eachcol_type) = gmm_computation(Θ, x)
-    function gmm_computation(Θ::Dict{Symbol, Vector}, x::Any)
+    
+    function gmm(Θ::Dict{Symbol, Vector}, x::Vector{Float64})
         n = size(x)[1]
         return mapreduce(usa->usa[3]*(1/((2*π)^(n/2)*det(usa[2])^(1/2)))*
                             (ℯ^(-((x-usa[1])'*inv(usa[2])*(x-usa[1])/2))), +, 
@@ -30,7 +29,7 @@ function create_gmm(K::Int64, dim::Int64)
     end
     gm(μ::Vector{Float64}, 
         Σ::Matrix{Float64}, 
-        x::sample_eachcol_type) = (1/((2*π)^(size(x)[1]/2)*det(Σ)^(1/2)))*(ℯ^(-((x-μ)'*inv(Σ)*(x-μ)/2)))
+        x::Vector{Float64}) = (1/((2*π)^(size(x)[1]/2)*det(Σ)^(1/2)))*(ℯ^(-((x-μ)'*inv(Σ)*(x-μ)/2)))
     return coefs, gmm, gm
 end
 
@@ -55,17 +54,20 @@ function EM!(Θ::Dict{Symbol, Vector}, X::Matrix{Float64}, K::Int64,
     Θ[:α] = fill(1/K, K)
     Θ[:μ] = [X[:, k] for k::Int64 in 1:K]
 
-    E_step(k::Int64, x::sample_eachcol_type) = Θ[:α][k]*gm(Θ[:μ][k], Θ[:Σ][k], x)/gmm(Θ, x)
+    E_step(k::Int64, x::Vector{Float64}) = Θ[:α][k]*gm(Θ[:μ][k], Θ[:Σ][k], x)/gmm(Θ, x)
 
     for _=1:steps      
         # E-step
-        γ = mapreduce(permutedims, vcat, [tmap(xᵢ::sample_eachcol_type->E_step(k, xᵢ), eachcol(X)) for k::Int64 in 1:K])'
+        γ = mapreduce(permutedims, vcat, [tmap(xᵢ::sample_eachcol_type->
+                E_step(k, Vector{Float64}(xᵢ)), eachcol(X)) for k::Int64 in 1:K])'
         # M-step
         Θ[:α] = vec(mean(γ, dims=2))
         Γ = sum(γ, dims=1)[1, :]
         for k::Int64=1:K
-            μₖ::Vector{Float64} = mapreduce(ix->γ[ix[1], k]*ix[2], +, zip(1:N, eachcol(X)))/Γ[k]
-            Σₖ::Matrix{Float64} = mapreduce(ix->γ[ix[1], k]*(ix[2]-μₖ)*(ix[2]-μₖ)', +, zip(1:N, eachcol(X)))/Γ[k]
+            μₖ::Vector{Float64} = mapreduce(ix->γ[ix[1], k]*
+                    Vector{Float64}(ix[2]), +, zip(1:N, eachcol(X)))/Γ[k]
+            Σₖ::Matrix{Float64} = mapreduce(ix->γ[ix[1], k]*
+                    (Vector{Float64}(ix[2])-μₖ)*(Vector{Float64}(ix[2])-μₖ)', +, zip(1:N, eachcol(X)))/Γ[k]
             if det(Σₖ) < 10e-18 Σₖ+=I*10e-10 end
             Θ[:μ][k] = μₖ
             Θ[:Σ][k] = Σₖ
