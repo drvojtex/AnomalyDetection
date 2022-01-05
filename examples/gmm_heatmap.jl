@@ -21,8 +21,5 @@ EM!(ps, X, K, gmm_model, gm_model, 100)
 # plot results
 x = y = LinRange(minimum(X), maximum(X), 100)
 z = Float64[gmm_model(ps, [yi, xi]) for xi = x, yi = y]
-p=heatmap(x, y, z)
-scatter!(p,X[1, :], X[2, :], label="")
-display(p)
-println("press enter")
-readline()
+p = heatmap(x, y, z)
+scatter!(p, X[1, :], X[2, :], label="")
