@@ -6,7 +6,7 @@ using ThreadTools
 
 include("src/parzenwindow.jl")
 include("src/gmm.jl")
-include("src/roc.jl")
+include("src/eval_metrics.jl")
 
 
 # Load all data.
