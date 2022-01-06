@@ -11,8 +11,8 @@ include("src/eval_metrics.jl")
 function main(show_report::Bool, dataset_name::String)
 
     # Load all data.
-    data_anomal = readdlm("data_anomalyproject/"+dataset_name+"/anomalous.txt")'
-    data_normal = readdlm("data_anomalyproject/"+dataset_name+"/normal.txt")'
+    data_anomal = readdlm(string("data_anomalyproject/", dataset_name, "/anomalous.txt"))'
+    data_normal = readdlm(string("data_anomalyproject/", dataset_name, "/normal.txt"))'
     data_anomal::Matrix{Float64} = data_anomal[:, shuffle(1:end)]
     data_normal::Matrix{Float64} = data_normal[:, shuffle(1:end)]
 
