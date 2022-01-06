@@ -110,7 +110,7 @@ function compare_models()
             append!(parzen_auc_arr, p)
         end
     end
-    df = DataFrame("gmm" = gmm_auc_arr, "parzen" = parzen_auc_arr)
+    df = DataFrame(gmm = gmm_auc_arr, parzen = parzen_auc_arr)
     CSV.write("auc_stat.csv", df)
 end
 
