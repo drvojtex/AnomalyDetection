@@ -57,7 +57,7 @@ function main(show_report::Bool, dataset_name::String)
     @doc """
     Function to choose optimal window-size (hyperparametr) of Parzen window estimator. The choose is 
     performed based on maximization of likelihood (proxy parametr) on given (validation) data. 
-    Minimum of window-size is 0.001, maximum is 10. The kernel function is Gaussian kernel.
+    Minimum of window-size is 0.01, maximum is 10, step is 0.01. The kernel function is Gaussian kernel.
 
     # Examples
     ```jldoctest
@@ -70,7 +70,7 @@ function main(show_report::Bool, dataset_name::String)
         models_dict = Dict{Float64, Float64}()  # likelihood => window-size
         lh::Float64 = 0
         kernel(x) = k(x)
-        for step::Float64=0.001:0.001:10
+        for step::Float64=0.01:0.01:10
             model(x) = create_parzen_window(step, trn_data, kernel, x) # prepare model
             lh = likelihood(model, data)
             models_dict[lh] = step
@@ -106,9 +106,9 @@ function compare_models()
     parzen_auc_arr = Vector{Float64}([])
     for name in datasets_names
         for iter=1:10
-            println(name, iter)
+            println(name, " / ", iter)
             g::Float64, p::Float64 = main(false, name)
-            println(g, p)
+            @printf("gmm auc: %.3f, parzen auc: %.3f\n", g, p)
             println()
             append!(gmm_auc_arr, g)
             append!(parzen_auc_arr, p)
