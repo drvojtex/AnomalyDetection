@@ -79,8 +79,8 @@ function main(show_report::Bool, dataset_name::String)
     end
 
     # Learn GMM on train data and choose the best count of components by validation data.
-    gmm_model, ps::Dict{Symbol, Vector} = choose_gmm_model(valid_data)
-    @printf("Best K: %d\n", size(ps[:μ])[1])
+    gmm_model, params::Dict{Symbol, Vector} = choose_gmm_model(valid_data)
+    @printf("Best K: %d\n", size(params[:μ])[1])
 
     # Learn Parzen window estimator on train data and choose the best window-size by validation data.
     h::Float64 = choose_parzenwindow_model(valid_data)
@@ -94,7 +94,7 @@ function main(show_report::Bool, dataset_name::String)
                                     zeros(size(data_anomal)[2], 1))[:, 1]);
 
     # Print evaluation report.
-    gmm_auc::Float64 = eval_report(gmm_model, ps, testing_data, testing_labels, show=show_report);
+    gmm_auc::Float64 = eval_report(gmm_model, params, testing_data, testing_labels, show=show_report);
     parzen_auc::Float64 = eval_report(parzenwindow, testing_data, testing_labels, show=show_report);
     return gmm_auc, parzen_auc
 end
