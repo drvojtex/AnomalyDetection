@@ -68,7 +68,7 @@ function EM!(Θ::Dict{Symbol, Vector}, X::Matrix{Float64}, K::Int64,
                     Vector{Float64}(ix[2]), +, zip(1:N, eachcol(X)))/Γ[k]
             Σₖ::Matrix{Float64} = mapreduce(ix->γ[ix[1], k]*
                     (Vector{Float64}(ix[2])-μₖ)*(Vector{Float64}(ix[2])-μₖ)', +, zip(1:N, eachcol(X)))/Γ[k]
-            if det(Σₖ) < 10e-18 Σₖ+=I*10e-10 end
+            if det(Σₖ) < 10e-18 Σₖ+=I*10e-6 end
             Θ[:μ][k] = μₖ
             Θ[:Σ][k] = Σₖ
         end 

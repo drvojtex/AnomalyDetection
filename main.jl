@@ -25,8 +25,9 @@ test_data_a = data_anomal[:, begin:Int(round(N_anomal/2))]
 N = size(data_normal)[1]
 
 # Define function to get likelihood proxy param.
-likelihood(model, params, data) = log(mean(tmap(x->model(params, Vector{Float64}(x)), eachcol(data))))
-likelihood(model, data) = log(mean(tmap(x->model(Vector{Float64}(x)), eachcol(data))))
+lt(x) = x < -100 ? -100 : x
+likelihood(model, params, data) = mean(tmap(x->lt(log(model(params, Vector{Float64}(x)))), eachcol(data)))
+likelihood(model, data) = mean(tmap(x->lt(log(model(Vector{Float64}(x)))), eachcol(data)))
 
 
 @doc """
@@ -45,7 +46,7 @@ where the 'Θ' is dictionary of params of the GMM,
 function choose_gmm_model(data::Matrix{Float64})
     models_dict = Dict{Float64, Vector{Any}}()  # likelihood => [model, params]
     lh::Float64 = 0
-    for K=2:10
+    for K::Int64=2:10
         ps::Dict{Symbol, Vector}, gmm_model, gm_model = create_gmm(K, N); # prepare model
         EM!(ps, trn_data, K, gmm_model, gm_model, 60); # learn model params
         lh = likelihood(gmm_model, ps, data)
@@ -57,7 +58,7 @@ end
 @doc """
 Function to choose optimal window-size (hyperparametr) of Parzen window estimator. The choose is 
 performed based on maximization of likelihood (proxy parametr) on given (validation) data. 
-Minimum of window-size is 0.1, maximum is 10. The kernel function is Gaussian kernel.
+Minimum of window-size is 0.001, maximum is 2. The kernel function is Gaussian kernel.
 
 # Examples
 ```jldoctest
@@ -70,7 +71,7 @@ function choose_parzenwindow_model(data::Matrix{Float64})
     models_dict = Dict{Float64, Float64}()  # likelihood => window-size
     lh::Float64 = 0
     kernel(x) = k(x)
-    for step=0.1:0.1:10
+    for step::Float64=0.001:0.001:2
         model(x) = create_parzen_window(step, trn_data, kernel, x) # prepare model
         lh = likelihood(model, data)
         models_dict[lh] = step
@@ -86,7 +87,7 @@ gmm_model, ps = choose_gmm_model(valid_data)
 h = choose_parzenwindow_model(valid_data)
 kernel(x) = k(x)
 parzenwindow(x) = create_parzen_window(h, trn_data, kernel, x)
-@printf("Best window-size: %.2f\n", h)
+@printf("Best window-size: %.3f\n", h)
 
 # Prepare testing data.
 testing_data = hcat(test_data_n, data_anomal);
