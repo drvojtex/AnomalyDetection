@@ -57,7 +57,7 @@ function main(show_report::Bool, dataset_name::String)
     @doc """
     Function to choose optimal window-size (hyperparametr) of Parzen window estimator. The choose is 
     performed based on maximization of likelihood (proxy parametr) on given (validation) data. 
-    Minimum of window-size is 0.001, maximum is 2. The kernel function is Gaussian kernel.
+    Minimum of window-size is 0.001, maximum is 10. The kernel function is Gaussian kernel.
 
     # Examples
     ```jldoctest
@@ -70,7 +70,7 @@ function main(show_report::Bool, dataset_name::String)
         models_dict = Dict{Float64, Float64}()  # likelihood => window-size
         lh::Float64 = 0
         kernel(x) = k(x)
-        for step::Float64=0.001:0.001:2
+        for step::Float64=0.001:0.001:10
             model(x) = create_parzen_window(step, trn_data, kernel, x) # prepare model
             lh = likelihood(model, data)
             models_dict[lh] = step
@@ -94,21 +94,26 @@ function main(show_report::Bool, dataset_name::String)
                                     zeros(size(data_anomal)[2], 1))[:, 1]);
 
     # Print evaluation report.
-    gmm_auc::Float64 = eval_report(gmm_model, params, testing_data, testing_labels, show=show_report);
-    parzen_auc::Float64 = eval_report(parzenwindow, testing_data, testing_labels, show=show_report);
+    gmm_auc::Float64 = eval_report(gmm_model, params, testing_data, testing_labels, show_report);
+    parzen_auc::Float64 = eval_report(parzenwindow, testing_data, testing_labels, show_report);
     return gmm_auc, parzen_auc
 end
+
 
 function compare_models()
     datasets_names::Vector{String} = filter(x->x[1]!='.', readdir("data_anomalyproject/"))
     gmm_auc_arr = Vector{Float64}([])
     parzen_auc_arr = Vector{Float64}([])
     for name in datasets_names
-        for _=1:10
+        for iter=1:10
+            println(name, iter)
             g::Float64, p::Float64 = main(false, name)
+            println(g, p)
+            println()
             append!(gmm_auc_arr, g)
             append!(parzen_auc_arr, p)
         end
+        break
     end
     df = DataFrame(gmm = gmm_auc_arr, parzen = parzen_auc_arr)
     CSV.write("auc_stat.csv", df)
