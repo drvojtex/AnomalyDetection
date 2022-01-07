@@ -10,7 +10,7 @@ The goal of the Anomaly Detection project is... The Julia project of GMM a PWE f
 ## Models
 
 ##### Parzen window estimation
-<br/>
+
 ![\Large f(\vec{x}) = \frac{1}{hN}\sum_{i=1}^{N} k(\frac{\vec{x}-\vec{x_i}}{h})](https://latex.codecogs.com/svg.image?f(\vec{x})&space;=&space;\frac{1}{hN}\sum_{i=1}^{N}&space;k(\frac{\vec{x}-\vec{x_i}}{h}))
 <br/>
 ![\Large k(\vec{x}) = \frac{1}{\sqrt{2\pi}}e^{-\frac{\vec{x}^T\vec{x}}{2}}](https://latex.codecogs.com/svg.image?k(\vec{x})&space;=&space;\frac{1}{\sqrt{2\pi}}e^{-\frac{\vec{x}^T\vec{x}}{2}})
