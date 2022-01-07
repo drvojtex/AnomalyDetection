@@ -8,6 +8,18 @@ include("src/gmm.jl")
 include("src/eval_metrics.jl")
 
 
+@doc """
+    Main function to load dataset, train Gaussian mixture model and Parzen window estimation, set hyperparametrs on valid data and eval models 
+    on test data. 
+
+    # Examples
+    ```jldoctest
+    g::Float64, p::Float64 = main(true, "yeast")
+    ```
+    where the 'g' is GMM roc-AUC on test data and 'p' is PWE roc-AUC on test data.
+    The main(show_report::Bool, dataset_name::String) has got two arguments. If 'show_report' is set to true, the whole evaluation report is 
+    printed, 'dataset_name' is a string name of dataset to be loaded.
+    """ ->
 function main(show_report::Bool, dataset_name::String)
 
     # Load all data.
@@ -15,8 +27,6 @@ function main(show_report::Bool, dataset_name::String)
     data_normal_raw = readdlm(string("data_anomalyproject/", dataset_name, "/normal.txt"))'
     data_anomal::Matrix{Float64} = data_anomal_raw[:, shuffle(1:end)]
     data_normal::Matrix{Float64} = data_normal_raw[:, shuffle(1:end)]
-    data_anomal = data_anomal[:, 1:400]
-    data_normal = data_normal[:, 1:400]
 
     # Prepare all data.
     N_normal::Int64 = size(data_normal)[2]
@@ -57,7 +67,7 @@ function main(show_report::Bool, dataset_name::String)
     end
 
     @doc """
-    Function to choose optimal window-size (hyperparametr) of Parzen window estimator. The choose is 
+    Function to choose optimal window-size (hyperparametr) of Parzen window estimation. The choose is 
     performed based on maximization of likelihood (proxy parametr) on given (validation) data. 
     Minimum of window-size is 0.01, maximum is 10, step is 0.01. The kernel function is Gaussian kernel.
 
@@ -84,7 +94,7 @@ function main(show_report::Bool, dataset_name::String)
     gmm_model, params::Dict{Symbol, Vector} = choose_gmm_model(valid_data)
     @printf("Best K: %d\n", size(params[:μ])[1])
 
-    # Learn Parzen window estimator on train data and choose the best window-size by validation data.
+    # Learn Parzen window estimation on train data and choose the best window-size by validation data.
     h::Float64 = choose_parzenwindow_model(valid_data)
     kernel(x) = k(x)
     parzenwindow(x) = create_parzen_window(h, trn_data, kernel, x)
@@ -102,23 +112,28 @@ function main(show_report::Bool, dataset_name::String)
 end
 
 
+@doc """
+    Function to learn models on dataset (on each dataset 10-times.) and store roc-AUC into CSV.
+
+    # Examples
+    ```jldoctest
+    compare_models()
+    ```
+    """ ->
 function compare_models()
     datasets_names::Vector{String} = filter(x->x[1]!='.', readdir("data_anomalyproject/"))
     gmm_auc_arr = Vector{Float64}([])
     parzen_auc_arr = Vector{Float64}([])
-    datasets_names = datasets_names[2]
-    #for name in datasets_names
-    for iter=1:10
-        println(name, " / ", iter)
-        g::Float64, p::Float64 = main(false, name)
-        @printf("gmm auc: %.3f, parzen auc: %.3f\n", g, p)
-        println()
-        append!(gmm_auc_arr, g)
-        append!(parzen_auc_arr, p)
+    for name in datasets_names
+        for iter=1:10
+            println(name, " / ", iter)
+            g::Float64, p::Float64 = main(false, name)
+            @printf("gmm auc: %.3f, parzen auc: %.3f\n", g, p)
+            println()
+            append!(gmm_auc_arr, g)
+            append!(parzen_auc_arr, p)
+        end
     end
-    #end
     df = DataFrame(gmm = gmm_auc_arr, parzen = parzen_auc_arr)
-    CSV.write("auc_stat_2.csv", df)
+    CSV.write("auc_stat.csv", df)
 end
-
-compare_models()

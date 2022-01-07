@@ -15,13 +15,13 @@ k(x::Vector{Float64}) = √(2*π)*ℯ^(-(x'*x)/2)
 
 
 @doc """
-Function to return Parzen window estimator.
+Function to return Parzen window estimation.
 
 # Examples
 ```jldoctest
 fun = Σ(h, X, f, x)
 ```
-where the 'fun' is parzen window estimator, 'h' is window size,
+where the 'fun' is parzen window estimation, 'h' is window size,
 'X' is set of train samples (size(dim, N) ~ (dimension of data, data count),
 'f' is kernel function and 'x' is given Vector{Float64} sample.
 """ ->
