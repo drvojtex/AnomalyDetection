@@ -11,10 +11,12 @@ include("src/eval_metrics.jl")
 function main(show_report::Bool, dataset_name::String)
 
     # Load all data.
-    data_anomal = readdlm(string("data_anomalyproject/", dataset_name, "/anomalous.txt"))'
-    data_normal = readdlm(string("data_anomalyproject/", dataset_name, "/normal.txt"))'
-    data_anomal::Matrix{Float64} = data_anomal[:, shuffle(1:end)]
-    data_normal::Matrix{Float64} = data_normal[:, shuffle(1:end)]
+    data_anomal_raw = readdlm(string("data_anomalyproject/", dataset_name, "/anomalous.txt"))'
+    data_normal_raw = readdlm(string("data_anomalyproject/", dataset_name, "/normal.txt"))'
+    data_anomal::Matrix{Float64} = data_anomal_raw[:, shuffle(1:end)]
+    data_normal::Matrix{Float64} = data_normal_raw[:, shuffle(1:end)]
+    data_anomal = data_anomal[:, 1:400]
+    data_normal = data_normal[:, 1:400]
 
     # Prepare all data.
     N_normal::Int64 = size(data_normal)[2]
@@ -104,19 +106,19 @@ function compare_models()
     datasets_names::Vector{String} = filter(x->x[1]!='.', readdir("data_anomalyproject/"))
     gmm_auc_arr = Vector{Float64}([])
     parzen_auc_arr = Vector{Float64}([])
-    for name in datasets_names
-        for iter=1:10
-            println(name, " / ", iter)
-            g::Float64, p::Float64 = main(false, name)
-            @printf("gmm auc: %.3f, parzen auc: %.3f\n", g, p)
-            println()
-            append!(gmm_auc_arr, g)
-            append!(parzen_auc_arr, p)
-        end
-        break
+    datasets_names = datasets_names[2]
+    #for name in datasets_names
+    for iter=1:10
+        println(name, " / ", iter)
+        g::Float64, p::Float64 = main(false, name)
+        @printf("gmm auc: %.3f, parzen auc: %.3f\n", g, p)
+        println()
+        append!(gmm_auc_arr, g)
+        append!(parzen_auc_arr, p)
     end
+    #end
     df = DataFrame(gmm = gmm_auc_arr, parzen = parzen_auc_arr)
-    CSV.write("auc_stat.csv", df)
+    CSV.write("auc_stat_2.csv", df)
 end
 
 compare_models()
