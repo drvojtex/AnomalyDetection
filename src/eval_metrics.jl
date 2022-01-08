@@ -48,14 +48,14 @@ end
 
 @doc """
     Wilcoxon sing-rank non-parametric test to check if two populations have the 
-    same median. 
+    same mean. 
 
     # Examples
     ```jldoctest
     W::Int64, z::Float64, b::Bool = wilcoxon(X::Vector{Float64}, Y::Vector{Float64})
     ```
     where 'W' is W-value, 'z' is z-score and 'b' is the test result for the First type error 0.05. 
-    When 'b' is true, the populations 'X' and 'Y' have got the same median.
+    When 'b' is true, the populations 'X' and 'Y' have got the same mean.
     """ ->
 function wilcoxon(X::Vector{Float64}, Y::Vector{Float64})
     xydiff::Vector{Float64} = filter(x->x!=0, X.-Y) 
