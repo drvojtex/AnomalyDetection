@@ -74,9 +74,9 @@ Hypothesis are:
 
 The metric to compare models by Wilcoxon test was roc-AUC.
 
-## Experimental settings and evaluation
+## Experimental settings, evaluation and results
 
-
+The evaluation of the model took place on each dataset as follows. Normal samples were randomly shuffled. Half of the normal samples were used as a training set, 25% of normal samples were used as a validation set, and 25% of normal samples and all anomalous samples were used as a test set. Both models (GMM and PWE) were trained on training set. The hyperparameters (number of components for GMM and window-size for PWE) were set by maximizing likelihood of the model on validation dataset. The roc-AUC was calculated on the test data set. The procedure described above was repeated ten times on each dataset. 
 
 ## Sources
 
