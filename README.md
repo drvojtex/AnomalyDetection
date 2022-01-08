@@ -64,9 +64,10 @@ The Wilcoxon signed-rank test is used to decide if difference between pair follo
 ![\Large W = \sum_{i=1}^{N}\textrm{sign}(y_i-x_i)R_i](https://latex.codecogs.com/svg.image?W&space;=&space;\sum_{i=1}^{N}\textrm{sign}(y_i-x_i)R_i) <br/>
 - where ![\Large R_i](https://latex.codecogs.com/svg.image?R_i) are ranks. 
 - The z-score is defined as 
-&nbsp; <img src="https://latex.codecogs.com/svg.image?z&space;=&space;\frac{W}{\sigma_W}" title="z = \frac{W}{\sigma_W}" />
-&nbsp; where 
-&nbsp; <img src="https://latex.codecogs.com/svg.image?\sigma^2_W&space;=&space;\frac{N(N&plus;1)(2N&plus;1)}{6}" title="\sigma^2_W = \frac{N(N+1)(2N+1)}{6}" />
+&nbsp; <img src="https://latex.codecogs.com/svg.image?z&space;=&space;\frac{W}{\sigma_W}" title="z = \frac{W}{\sigma_W}" /><br/>
+&nbsp; where<br/>
+&nbsp; <img src="https://latex.codecogs.com/svg.image?\sigma^2_W&space;=&space;\frac{N(N&plus;1)(2N&plus;1)}{6}" title="\sigma^2_W = \frac{N(N+1)(2N+1)}{6}" /><br/>
+
 
 ## Sources
 
