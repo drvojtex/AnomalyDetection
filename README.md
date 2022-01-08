@@ -11,8 +11,8 @@ The primary goal of the Anomaly Detection project is to implement **Parzen windo
 **The repository is organised as follow**
 In the folder _src_ are implemented Gaussian mixture model, Parzen window estimation, EM algorithm, Wilcoxon signed-rank test and evaluation report (including roc-AUC). In the folder _data_anomalyproject_ are stored datasets, in the folder _auc_statistics_ are stored CSV files with roc-AUC for models (each CSV for one dataset, each line of CSV corresponds to one evaluation of learning and testing the model and each column of CSV corresponds to one model). In the file _main.jl_ are functions to learn and compare models. In the folder _examples_ are codes to evaluate models on random generated dataset with visualisation (human eye-check such as charts bellow).
 
-![alt text](https://github.com/kozvojtex/san_semestral/blob/master/examples/gmm_heatmap.eps?raw=true)
-![alt text](https://github.com/kozvojtex/san_semestral/blob/master/examples/parzenwindow_plot.eps?raw=true)
+![alt text](https://github.com/kozvojtex/san_semestral/blob/master/examples/gmm_heatmap.svg?raw=true)
+![alt text](https://github.com/kozvojtex/san_semestral/blob/master/examples/parzenwindow_plot.svg?raw=true)
 
 ## Models & tools
 
@@ -58,7 +58,13 @@ Expectation maximization (EM) algorithm is a numerical technique for maximum lik
 ![\Large \hat{\Sigma}^2_k  = \frac{\sum_{i=1}^{N}\hat{\gamma}_{ik}(\vec{x}_i - \hat{\vec{\mu}}_i)\cdot(\vec{x}_i - \hat{\vec{\mu}}_i)^T}{\sum_{i=1}^{N}\hat{\gamma}_{ik}}](https://latex.codecogs.com/svg.image?\hat{\Sigma}^2_k&space;&space;=&space;\frac{\sum_{i=1}^{N}\hat{\gamma}_{ik}(\vec{x}_i&space;-&space;\hat{\vec{\mu}}_i)\cdot(\vec{x}_i&space;-&space;\hat{\vec{\mu}}_i)^T}{\sum_{i=1}^{N}\hat{\gamma}_{ik}}) <br/>
 
 ##### Wilcoxon signed-rank test
-The Wilcoxon signed-rank test is used to decide if difference between pair follows a symmetric distribution around zero. It is used as a robust statistical test, because unlike Student's t-test, the Wilcoxon signed-rank test does not assume that the differences between paired samples are normally distributed. On a large dataset it has greater statistical power than Student's t-test and is more likely to produce a statistically significant result. 
+The Wilcoxon signed-rank test is used to decide if difference between pair follows a symmetric distribution around zero. It is used as a robust statistical test, because unlike Student's t-test, the Wilcoxon signed-rank test does not assume that the differences between paired samples are normally distributed. On a large dataset it has greater statistical power than Student's t-test and is more likely to produce a statistically significant result. Steps are follow:
+- For each pair of values compute its difference and discard zero differences.
+- Sort the differences in ascending order and assign them a rank.
+- Compute test statistic as <br/>
+![\Large W = \sum_{i=1}^{N}\textrm{sign}(y_i-x_i)R_i](https://latex.codecogs.com/svg.image?W&space;=&space;\sum_{i=1}^{N}\textrm{sign}(y_i-x_i)R_i) <br/>
+- where ![\Large R_i](https://latex.codecogs.com/svg.image?R_i) are ranks. 
+- The z-score is defined as 
 
 ## Sources
 
