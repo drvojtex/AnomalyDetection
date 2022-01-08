@@ -36,10 +36,12 @@ And the sum of component weights is equal one.
 <br/>
 Expectation maximization (EM) algorithm is a numerical technique for maximum likelihood estimation by iterative updating the model parameters. The first step, known as the expectation step or E step, consists of calculating the expectation of the component assignments for each data point given the model parameters. The second step the maximization (M) step, consists of maximizing the expectations calculated in the E step with respect to the model parameters. M step consists of updating the parametres. 
 <br/>
+
 > Initialization Step:
-- Randomly assign samples without replacement from the dataset to the component mean estimates. 
-- Set all component covariance estimates to the sample covariance.
-- Set all component distribution prior estimates to the uniform distribution 1/K
+* Randomly assign samples without replacement from the dataset to the component mean estimates. 
+* Set all component covariance estimates to the sample covariance.
+* Set all component distribution prior estimates to the uniform distribution 1/K
+
 > Expectation (E) Step: <br/>
 
 ![\Large \hat{\gamma}_{ik} = \frac{\hat{\alpha}_kG(\vec{x}_i|\vec{\mu}_k, \Sigma_k)}{\sum_{j=1}^{K}\hat{\alpha}_jG(\vec{x}_i|\vec{\mu}_j, \Sigma_j)}](https://latex.codecogs.com/svg.image?\hat{\gamma}_{ik}&space;=&space;\frac{\hat{\alpha}_kG(\vec{x}_i|\vec{\mu}_k,&space;\Sigma_k)}{\sum_{j=1}^{K}\hat{\alpha}_jG(\vec{x}_i|\vec{\mu}_j,&space;\Sigma_j)}) <br/>
