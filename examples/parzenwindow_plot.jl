@@ -10,8 +10,8 @@ data = vcat(data1, data2)
 data = reshape(data, (1, size(data)[1]))
 
 # Plot data
-plt = plot()
-scatter!(data1, zeros(20), color="black", label = "")
+plt = plot(title = "Parzen window estimation (window size 'h')", xlabel="Data value", ylabel="Likelihood")
+scatter!(data1, zeros(20), color="black", label="Data")
 scatter!(data2, zeros(10), color="black", label = "")
 
 # Plot parzen window function

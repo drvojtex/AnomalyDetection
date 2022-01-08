@@ -55,7 +55,7 @@ function EM!(Θ::Dict{Symbol, Vector}, X::Matrix{Float64}, K::Int64,
     Θ[:μ] = [X[:, k] for k::Int64 in 1:K]
 
     saturate_cov(Σ) = det(Σ) < 10e-10 ? Σ+I*10e-5 : Σ
-    Θ[:Σ] = map(x->saturate_cov(x), Θ[:Σ])
+    Θ[:Σ] = tmap(x->saturate_cov(x), Θ[:Σ])
 
     E_step(k::Int64, x::Vector{Float64}) = Θ[:α][k]*gm(Θ[:μ][k], Θ[:Σ][k], x)/gmm(Θ, x)
 
