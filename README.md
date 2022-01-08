@@ -13,6 +13,7 @@ In the folder _src_ are implemented Gaussian mixture model, Parzen window estima
 
 ![alt text](https://github.com/kozvojtex/san_semestral/blob/master/examples/gmm_heatmap.svg?raw=true)
 ![alt text](https://github.com/kozvojtex/san_semestral/blob/master/examples/parzenwindow_plot.svg?raw=true)
+<img src="https://github.com/kozvojtex/san_semestral/blob/master/examples/parzenwindow_plot.svg" width="50%" height="50%">
 
 ## Models & tools
 
