@@ -33,7 +33,7 @@ function main(show_report::Bool, dataset_name::String)
     trn_data::Matrix{Float64} = data_normal[:, begin:Int(round(N_normal/2))]
     valid_data::Matrix{Float64} = data_normal[:, Int(round(N_normal/2)):Int(round(3*N_normal/4))]
     test_data_n::Matrix{Float64} = data_normal[:, Int(round(3*N_normal/4)):end]
-    N = size(data_normal)[1]
+    N::Int64 = size(data_normal)[1]
 
     # Define function to get likelihood proxy param.
     lt(x) = x < -10e5 ? -10e5 : x
