@@ -56,6 +56,8 @@ Expectation maximization (EM) algorithm is a numerical technique for maximum lik
 
 ![\Large \hat{\Sigma}^2_k  = \frac{\sum_{i=1}^{N}\hat{\gamma}_{ik}(\vec{x}_i - \hat{\vec{\mu}}_i)\cdot(\vec{x}_i - \hat{\vec{\mu}}_i)^T}{\sum_{i=1}^{N}\hat{\gamma}_{ik}}](https://latex.codecogs.com/svg.image?\hat{\Sigma}^2_k&space;&space;=&space;\frac{\sum_{i=1}^{N}\hat{\gamma}_{ik}(\vec{x}_i&space;-&space;\hat{\vec{\mu}}_i)\cdot(\vec{x}_i&space;-&space;\hat{\vec{\mu}}_i)^T}{\sum_{i=1}^{N}\hat{\gamma}_{ik}}) <br/>
 
+If the determinant of the covariance matrix is less than 10e-10, then an Identity matrix multiplied by 10e-5 is added to the covariance matrix. This prevents the zero determinant of the covariance matrix.
+
 ##### Wilcoxon signed-rank test
 The Wilcoxon signed-rank test is used to decide if difference between pair follows a symmetric distribution around zero. It is used as a robust statistical test, because unlike Student's t-test, the Wilcoxon signed-rank test does not assume that the differences between paired samples are normally distributed. On a large dataset it has greater statistical power than Student's t-test and is more likely to produce a statistically significant result. Steps are follow:
 1. For each pair of values compute its difference and discard zero differences.
