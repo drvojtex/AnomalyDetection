@@ -76,9 +76,18 @@ The metric to compare models by Wilcoxon test was roc-AUC.
 
 ## Experimental settings, evaluation and results
 
-The evaluation of the model took place on each dataset as follows. Normal samples were randomly shuffled. Half of the normal samples were used as a training set, 25% of normal samples were used as a validation set, and 25% of normal samples and all anomalous samples were used as a test set. Both models (GMM and PWE) were trained on training set. The hyperparameters (number of components for GMM and window-size for PWE) were set by maximizing likelihood of the model on validation dataset. The roc-AUC was calculated on the test data set. The procedure described above was repeated ten times on each dataset. 
+The evaluation of the model took place on each dataset as follows. Normal samples were randomly shuffled. Half of the normal samples were used as a training set, 25% of normal samples were used as a validation set, and 25% of normal samples and all anomalous samples were used as a test set. Both models (GMM and PWE) were trained on training set. The hyperparameters (number of components for GMM and window-size for PWE) were set by maximizing likelihood of the model on validation dataset. GMM maximized likelihood for the number of components 2 to 10, with the EM algorithm always was performed with 60 iterations. PWE maximized the likelihood for window sizes from 0.01 to 10 with 0.01 increments. The roc-AUC was calculated on the test data set for the best model (best GMM and best PWE) based on likelihood. The procedure described above was repeated ten times on each dataset. The dataframe (two columns for models, 90 rows for models roc-AUC on 9 datasets) was the input observation for Wilcoxon test. The goal of the test was to decide if there is a statistical difference between means of roc-AUC results of the models. The test was performed with the type I error rate (significance level) 0.05. Z-score was -2.5, which is less than -1.96. The null hypothesis was rejected. There is the statistical significance of the difference between means of roc-AUC observations of the models. Since the mean of GMM (0.9) was greater than the mean of PWE (0.88), the GMM gave a better result than PWE on given datasets by the roc-AUC metric.
 
 ## Sources
+
+- https://cw.fel.cvut.cz/wiki/_media/courses/b4m36san/robust.pdf
+- https://cw.fel.cvut.cz/wiki/_media/courses/b4m36san/san_anomaly.pdf
+- https://brilliant.org/wiki/gaussian-mixture-model/
+- https://www.ics.uci.edu/~smyth/courses/cs274/notes/EMnotes.pdf
+- http://users.sussex.ac.uk/~grahamh/RM1web/WilcoxonHandoout2011.pdf
+- https://pro.arcgis.com/en/pro-app/2.8/tool-reference/spatial-statistics/what-is-a-z-score-what-is-a-p-value.htm
+- https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test
+
 
 ## License
 MIT
