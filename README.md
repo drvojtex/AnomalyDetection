@@ -58,12 +58,12 @@ Expectation maximization (EM) algorithm is a numerical technique for maximum lik
 
 ##### Wilcoxon signed-rank test
 The Wilcoxon signed-rank test is used to decide if difference between pair follows a symmetric distribution around zero. It is used as a robust statistical test, because unlike Student's t-test, the Wilcoxon signed-rank test does not assume that the differences between paired samples are normally distributed. On a large dataset it has greater statistical power than Student's t-test and is more likely to produce a statistically significant result. Steps are follow:
-Markup : * For each pair of values compute its difference and discard zero differences.
-* Sort the differences in ascending order and assign them a rank.
-* Compute test statistic as <br/>
+1. For each pair of values compute its difference and discard zero differences.
+2. Sort the differences in ascending order and assign them a rank.
+3. Compute test statistic as <br/>
 ![\Large W = \sum_{i=1}^{N}\textrm{sign}(y_i-x_i)R_i](https://latex.codecogs.com/svg.image?W&space;=&space;\sum_{i=1}^{N}\textrm{sign}(y_i-x_i)R_i) <br/>
-* where ![\Large R_i](https://latex.codecogs.com/svg.image?R_i) are ranks. 
-* The z-score is defined as<br/>
+4. where ![\Large R_i](https://latex.codecogs.com/svg.image?R_i) are ranks. 
+5. The z-score is defined as<br/>
 &nbsp; <img src="https://latex.codecogs.com/svg.image?z&space;=&space;\frac{W}{\sigma_W}" title="z = \frac{W}{\sigma_W}" /><br/>
 &nbsp; where<br/>
 &nbsp; <img src="https://latex.codecogs.com/svg.image?\sigma^2_W&space;=&space;\frac{N(N&plus;1)(2N&plus;1)}{6}" title="\sigma^2_W = \frac{N(N+1)(2N+1)}{6}" /><br/>
